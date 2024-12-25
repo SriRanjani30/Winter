@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snowfall Animation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: url() no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+        }
+        .snowflake {
+            position: absolute;
+            color: white;
+            font-size: 1em;
+            opacity: 0.8;
+            animation: fall linear infinite, sway infinite;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+        @keyframes sway {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(20px);
+            }
+        }
+        .game-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .game-button:hover {
+            background-color: #3e8e41;
+        }
+        .game-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 24px;
+            color: #fff;
+        }
+        .score {
+            font-size: 36px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <button class="game-button" id="start-game">Start Game</button>
+    <div class="game-container" id="game-container" style="display: none;">
+        <p id="score">Score: <span class="score">0</span></p>
+    </div>
+    <script>
+        const createSnowflake = () => {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.top = Math.random() * 100 + 'vh'; 
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            snowflake.style.animation = `fall ${Math.random() * 5 + 5}s linear, sway ${Math.random() * 5 + 3}s ease-in-out infinite`;
+            snowflake.textContent = '❄';
+            document.body.appendChild(snowflake);
+            setTimeout(() => {
+                snowflake.remove();
+            }, (Math.random() * 5 + 5) * 1000);
+        };
+
+        setInterval(createSnowflake, 100);
+        for (let i = 0; i < 100; i++) {
+            setTimeout(createSnowflake, Math.random() * 5000);
+        }
+        let score = 0;
+        let gameStarted = false;
+
+        document.getElementById('start-game').addEventListener('click', () => {
+            if (!gameStarted) {
+                gameStarted = true;
+                document.getElementById('game-container').style.display = 'block';
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('snowflake')) {
+                        score++;
+                        document.querySelector('.score').textContent = score;
+                        e.target.remove();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
